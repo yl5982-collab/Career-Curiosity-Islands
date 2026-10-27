@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Career Curiosity Islands - Explore Your Future</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-ocean: #6bc5e8;
+      --ocean-deep: #419ec4;
+      --sand-yellow: #ffe89e;
+      --card-white: #ffffff;
+      --text-dark: #2c3e50;
+      --text-muted: #5f7d95;
+      --radius-lg: 24px;
+      --radius-md: 16px;
+      --radius-pill: 999px;
+      --shadow-soft: 0 12px 28px rgba(35, 94, 122, 0.15);
+      --shadow-hover: 0 18px 36px rgba(35, 94, 122, 0.25);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: radial-gradient(circle at 50% 10%, #87ddff 0%, var(--bg-ocean) 60%, var(--ocean-deep) 100%);
+      color: var(--text-dark);
+      min-height: 100vh;
+      padding: 30px 20px 80px;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Cartoon Cloud / Wave Accents */
+    body::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 180px;
+      background: radial-gradient(circle, rgba(255,255,255,0.4) 20%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Header */
+    header {
+      text-align: center;
+      margin-bottom: 35px;
+    }
+    .badge-pill {
+      display: inline-block;
+      background: #ffec99;
+      color: #925400;
+      font-weight: 800;
+      font-size: 0.9rem;
+      padding: 6px 18px;
+      border-radius: var(--radius-pill);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 12px;
+    }
+    h1 {
+      font-family: 'Fredoka', cursive;
+      font-size: 2.8rem;
+      color: #ffffff;
+      text-shadow: 0 4px 12px rgba(18, 77, 107, 0.45);
+      margin-bottom: 8px;
+    }
+    .subtitle {
+      color: #f0faff;
+      font-size: 1.15rem;
+      font-weight: 600;
+      max-width: 700px;
+      margin: 0 auto;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.15);
+    }
+
+    /* Main Layout */
+    .adventure-grid {
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    @media (max-width: 992px) {
+      .adventure-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Island Selection Map */
+    .map-sidebar {
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(12px);
+      border: 4px solid #ffffff;
+      border-radius: var(--radius-lg);
+      padding: 22px;
+      box-shadow: var(--shadow-soft);
+    }
+    .sidebar-title {
+      font-family: 'Fredoka', cursive;
+      font-size: 1.35rem;
+      color: #1a5676;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .island-nav {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .island-btn {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      width: 100%;
+      border: 3px solid transparent;
+      border-radius: var(--radius-md);
+      background: #f7fcff;
+      padding: 12px 14px;
+      cursor: pointer;
+      text-align: left;
+      font-family: inherit;
+      transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.04);
+    }
+    .island-btn:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.08);
+      border-color: #ffd166;
+    }
+    .island-btn.active {
+      background: #ffffff;
+      border-color: #ffaa00;
+      transform: scale(1.03);
+      box-shadow: 0 10px 20px rgba(255, 170, 0, 0.25);
+    }
+    .island-icon {
+      font-size: 2.2rem;
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 14px;
+      background: #eef8ff;
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+    }
+    .island-btn-text h3 {
+      font-family: 'Fredoka', cursive;
+      font-size: 1.15rem;
+      color: #1e3a5f;
+    }
+    .island-btn-text p {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+
+    /* Content Area */
+    .content-hub {
+      background: var(--card-white);
+      border-radius: var(--radius-lg);
+      padding: 34px;
+      box-shadow: var(--shadow-soft);
+      border: 4px solid #ffffff;
+      display: flex;
+      flex-direction: column;
+      gap: 26px;
+    }
+
+    /* Island Hero Banner */
+    .island-hero {
+      background: linear-gradient(135deg, #e3f7ff 0%, #fff7d6 100%);
+      padding: 24px;
+      border-radius: var(--radius-md);
+      border: 2px dashed #9fd9ff;
+    }
+    .island-hero h2 {
+      font-family: 'Fredoka', cursive;
+      font-size: 2rem;
+      color: #0b496d;
+      margin-bottom: 6px;
+    }
+    .island-hero .theme-tag {
+      display: inline-block;
+      font-size: 0.85rem;
+      font-weight: 800;
+      background: #0b496d;
+      color: #fff;
+      padding: 3px 12px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+
+    /* Personal Strengths Box (Confidence Booster) */
+    .strengths-card {
+      background: #f4faff;
+      border-left: 6px solid #29a0f4;
+      padding: 16px 20px;
+      border-radius: 8px;
+    }
+    .strengths-card h4 {
+      font-family: 'Fredoka', cursive;
+      color: #105988;
+      font-size: 1.15rem;
+      margin-bottom: 6px;
+    }
+    .strengths-card p {
+      color: #3b5971;
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+
+    /* Section Subheaders */
+    .section-title {
+      font-family: 'Fredoka', cursive;
+      font-size: 1.4rem;
+      color: #1e3a5f;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    /* Careers & Role Models Cards */
+    .career-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 18px;
+    }
+    .career-card {
+      background: #ffffff;
+      border: 2px solid #e7f2f8;
+      border-radius: var(--radius-md);
+      padding: 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+      transition: all 0.25s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .career-card:hover {
+      border-color: #6bc5e8;
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-hover);
+    }
+    .career-title {
+      font-family: 'Fredoka', cursive;
+      font-size: 1.25rem;
+      color: #0b496d;
+    }
+    .role-model {
+      margin: 10px 0;
+      padding: 8px 12px;
+      background: #fff8e8;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      color: #7a4e00;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .traits-list {
+      font-size: 0.88rem;
+      color: #4b6584;
+      line-height: 1.5;
+      margin: 8px 0;
+    }
+
+    /* Interactive Knowledge Review */
+    .knowledge-box {
+      background: #fffcee;
+      border: 2px solid #ffeaa7;
+      border-radius: var(--radius-md);
+      padding: 20px;
+    }
+    .chips-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .knowledge-chip {
+      background: #ffffff;
+      border: 2px solid #ffd166;
+      color: #8c5b00;
+      font-weight: 700;
+      font-size: 0.88rem;
+      padding: 8px 16px;
+      border-radius: var(--radius-pill);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+    .knowledge-chip:hover {
+      background: #ffd166;
+      color: #000;
+      transform: scale(1.05);
+    }
+    .chip-instruction {
+      font-size: 0.82rem;
+      color: #8a7852;
+      font-style: italic;
+      margin-top: 6px;
+    }
+
+    /* Learning Roadmap */
+    .roadmap-list {
+      list-style: none;
+      display: grid;
+      gap: 10px;
+    }
+    .roadmap-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      background: #f7fafc;
+      padding: 12px 16px;
+      border-radius: 10px;
+      font-size: 0.92rem;
+      color: #334d6e;
+    }
+    .roadmap-icon {
+      font-size: 1.2rem;
+      line-height: 1;
+    }
+
+    /* Knowledge Modal */
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(14, 43, 61, 0.6);
+      backdrop-filter: blur(4px);
+      z-index: 999;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    .modal-backdrop.show {
+      display: flex;
+    }
+    .modal-content {
+      background: #ffffff;
+      border-radius: var(--radius-lg);
+      max-width: 550px;
+      width: 100%;
+      padding: 28px;
+      border: 4px solid #ffd166;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+      position: relative;
+      animation: popIn 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+    }
+    @keyframes popIn {
+      from { transform: scale(0.85); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    .modal-close {
+      position: absolute;
+      top: 16px;
+      right: 18px;
+      background: #eef4f8;
+      border: none;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      font-weight: 800;
+      color: #4b6584;
+      cursor: pointer;
+    }
+    .modal-close:hover {
+      background: #ff6b6b;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <span class="badge-pill">Holland RIASEC Adventure</span>
+      <h1>Career Curiosity Islands</h1>
+      <p class="subtitle">Discover how your unique character strengths connect to exciting future careers and the subjects you learn in school!</p>
+    </header>
+
+    <div class="adventure-grid">
+      <!-- Left: Cartoon Navigation Map -->
+      <nav class="map-sidebar">
+        <div class="sidebar-title">
+          <span>🗺️</span> Choose Your Island
+        </div>
+        <div class="island-nav" id="islandNav">
+          <!-- Dynamically populated buttons -->
+        </div>
+      </nav>
+
+      <!-- Right: Detailed Interactive Career & Learning Hub -->
+      <main class="content-hub" id="contentHub">
+        <!-- Dynamically rendered island content -->
+      </main>
+    </div>
+  </div>
+
+  <!-- Interactive Knowledge Explanation Modal -->
+  <div class="modal-backdrop" id="knowledgeModal">
+    <div class="modal-content">
+      <button class="modal-close" id="modalClose">&times;</button>
+      <div style="font-size: 2.2rem; margin-bottom: 8px;" id="mIcon">📘</div>
+      <h3 style="font-family: 'Fredoka', cursive; font-size: 1.6rem; color: #1e3a5f;" id="mTitle">Concept Name</h3>
+      <div style="margin: 12px 0 16px; padding: 12px; background: #eef8ff; border-radius: 10px; font-size: 0.95rem; color: #1c5274;" id="mReview">
+        <strong>Curriculum Review:</strong> What it means in your school textbook...
+      </div>
+      <div style="font-size: 0.95rem; line-height: 1.5; color: #3b5971;" id="mApplication">
+        <strong>Career Superpower:</strong> How real professionals use this on the job!
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Comprehensive RIASEC Island Data with Strengths, Careers, Role Models & Deep Knowledge Review
+    const islandsData = [
+      {
+        id: "realistic",
+        name: "Maker Reef",
+        riasec: "Realistic (Doers)",
+        icon: "🛠️",
+        tagline: "Tangible Creation & Field Problem-Solving",
+        strengths: "You possess high spatial awareness, practical persistence, and a natural knack for working with physical materials, nature, or technology.",
+        advice: "Don't underestimate hands-on building! Your ability to turn abstract ideas into working prototypes is one of the most valued superpowers in modern engineering.",
+        careers: [
+          {
+            title: "Robotics & Hardware Engineer",
+            roleModel: "Nikola Tesla (Inventor & Electrical Pioneer)",
+            skills: "Physics, CAD Modeling, Circuit Design",
+            traits: "Tenacious, Detail-Oriented, Practical"
+          },
+          {
+            title: "Wildlife Field Ecologist",
+            roleModel: "Jane Goodall (Primatologist & Conservationist)",
+            skills: "Biological Sampling, GPS Mapping, Data Logging",
+            traits: "Observant, Resilient, Nature-Minded"
+          }
+        ],
+        knowledge: [
+          {
+            tag: "Newton's Laws of Motion (Physics)",
+            icon: "⚙️",
+            review: "Newton's 3rd Law states that for every action, there is an equal and opposite reaction.",
+            application: "Robotics engineers calculate actuator force and motor torque based on Newton's laws so robotic arms can lift heavy objects without toppling."
+          },
+          {
+            tag: "Ecosystem Food Webs (Biology)",
+            icon: "🌿",
+            review: "Ecosystems rely on trophic cascades where energy flows from primary producers to apex predators.",
+            application: "Field scientists map these exact networks to forecast whether protecting a predator will prevent deforestation in national parks."
+          }
+        ],
+        roadmap: [
+          "Start a beginner Arduino or Raspberry Pi hands-on kit at home.",
+          "Participate in local campus stream biodiversity or soil monitoring activities.",
+          "Try 3D modeling a pencil holder using free browser tools like Tinkercad."
+        ]
+      },
+      {
+        id: "investigative",
+        name: "Discovery Atoll",
+        riasec: "Investigative (Thinkers)",
+        icon: "🔬",
+        tagline: "Curiosity, Analysis & Scientific Inquiry",
+        strengths: "You are driven by deep curiosity, independent intellectual exploration, and the urge to discover why things work the way they do.",
+        advice: "Your comfort with complex questions is a vital gift. Channel your curiosity into structured inquiry—science is simply organized questioning.",
+        careers: [
+          {
+            title: "Data & AI Ethicist",
+            roleModel: "Alan Turing (Father of Modern Computing)",
+            skills: "Algorithm Analysis, Logic, Applied Ethics",
+            traits: "Reflective, Rigorous, Intellectually Honest"
+          },
+          {
+            title: "Biomedical Geneticist",
+            roleModel: "Marie Curie (Pioneer in Radioactivity Research)",
+            skills: "DNA Sequencing, Molecular Biology, Statistics",
+            traits: "Perseverant, Analytical, Truth-Seeking"
+          }
+        ],
+        knowledge: [
+          {
+            tag: "Hypothesis Testing (Scientific Method)",
+            icon: "🧪",
+            review: "Formulating a testable hypothesis with a defined independent, dependent, and controlled variable.",
+            application: "AI researchers test whether tweaking neural network weights actually improves diagnostic accuracy or just causes overfitting."
+          },
+          {
+            tag: "Statistical Probability (Math)",
+            icon: "📊",
+            review: "Calculating conditional probability and distribution curves to determine significance.",
+            application: "Geneticists use probability matrices to pinpoint disease vulnerabilities in human genome sequences."
+          }
+        ],
+        roadmap: [
+          "Read 'Brief Answers to the Big Questions' by Stephen Hawking.",
+          "Learn fundamental Python data analysis using free platforms like Kaggle.",
+          "Design a science-fair style mini experiment testing daily habits on focus."
+        ]
+      },
+      {
+        id: "artistic",
+        name: "Expression Isle",
+        riasec: "Artistic (Creators)",
+        icon: "🎨",
+        tagline: "Creative Storytelling, Aesthetics & Originality",
+        strengths: "You have vivid imagination, aesthetic sensitivity, and an innate desire to communicate emotion and meaning through unique mediums.",
+        advice: "Art is not just decorative—it is how humans make sense of complex realities. Combine your creativity with modern tools to build whole worlds.",
+        careers: [
+          {
+            title: "Interactive Game Worldbuilder",
+            roleModel: "Hayao Miyazaki (Legendary Anime Director & Artist)",
+            skills: "Visual Narrative, Concept Art, Color Theory",
+            traits: "Visionary, Emotionally Intuitive, Expressive"
+          },
+          {
+            title: "UX & Creative Director",
+            roleModel: "Frida Kahlo (Master of Symbolic & Expressive Art)",
+            skills: "Human-Centered Design, Typography, Storyboarding",
+            traits: "Empathetic, Original, Bold"
+          }
+        ],
+        knowledge: [
+          {
+            tag: "Visual Hierarchy & Color Theory (Fine Arts)",
+            icon: "🖌️",
+            review: "Complementary vs. analogous colors and how visual weight guides the human eye.",
+            application: "UX designers use high-contrast focal points to ensure users can effortlessly navigate emergency alerts on medical apps."
+          },
+          {
+            tag: "Metaphor & Narrative Structure (Language Arts)",
+            icon: "📖",
+            review: "Hero's journey archetypes and symbolic metaphors that convey subtext beyond literal words.",
+            application: "Game designers use narrative arcs to create deeply resonant story quests in games like Zelda or Genshin Impact."
+          }
+        ],
+        roadmap: [
+          "Curate your own digital art or creative writing portfolio on Notion.",
+          "Analyze the user interface of your 3 favorite apps: what makes them delight or frustrate you?",
+          "Experiment with Figma (free) to design a fictional mobile app for your school club."
+        ]
+      },
+      {
+        id: "social",
+        name: "Harmony Haven",
+        riasec: "Social (Helpers)",
+        icon: "🤝",
+        tagline: "Empowering People, Community & Growth",
+        strengths: "You are an empathetic listener who quickly understands how others feel, naturally building trust and guiding peers toward collaboration.",
+        advice: "Your emotional intelligence (EQ) is the rarest human skill in an automated world. You can be the catalyst that unlocks human potential.",
+        careers: [
+          {
+            title: "Adolescent Mental Health Counselor",
+            roleModel: "Fred Rogers (Mister Rogers - Pioneer of Child Empathy)",
+            skills: "Active Listening, Cognitive Behavioral Insights, Crisis Guidance",
+            traits: "Compassionate, Patient, Nonjudgmental"
+          },
+          {
+            title: "Educational Technology Coach",
+            roleModel: "Malala Yousafzai (Global Advocate for Girls' Education)",
+            skills: "Instructional Design, Facilitation, Curriculum Design",
+            traits: "Inspiring, Culturally Aware, Communicative"
+          }
+        ],
+        knowledge: [
+          {
+            tag: "Active Listening & Rhetorical Awareness (English)",
+            icon: "💬",
+            review: "Summarizing the speaker's main intent before responding and adjusting tone for the audience.",
+            application: "Counselors use active reflection techniques to make teens feel heard and safe before co-creating emotional coping strategies."
+          },
+          {
+            tag: "Social Systems & Demographics (Social Studies)",
+            icon: "🌍",
+            review: "Understanding how socioeconomic background and community infrastructure impact well-being.",
+            application: "Educational coaches adapt learning tools so underfunded schools receive equitable, accessible education."
+          }
+        ],
+        roadmap: [
+          "Volunteer as a peer tutor or summer camp assistant to practice coaching.",
+          "Lead a school discussion group on digital wellness and teen balance.",
+          "Take an introductory online course in positive psychology or conflict mediation."
+        ]
+      },
+      {
+        id: "enterprising",
+        name: "Venture Peak",
+        riasec: "Enterprising (Persuaders)",
+        icon: "⚡",
+        tagline: "Strategic Leadership, Vision & Impact",
+        strengths: "You enjoy taking initiative, pitching ideas, organizing groups toward a shared goal, and turning opportunities into reality.",
+        advice: "True leadership is about service and inspiring confidence in others. Pair your persuasive drive with ethical conviction.",
+        careers: [
+          {
+            title: "Clean-Tech Venture Founder",
+            roleModel: "Steve Jobs (Visionary Product Innovator & Storyteller)",
+            skills: "Strategic Roadmapping, Pitching, Team Leadership",
+            traits: "Decisive, Charismatic, Risk-Tolerant"
+          },
+          {
+            title: "Public Policy Campaign Director",
+            roleModel: "Satya Nadella (Transformational Tech & Culture Leader)",
+            skills: "Public Speaking, Negotiation, Coalition Building",
+            traits: "Strategic, Persuasive, Resilient"
+          }
+        ],
+        knowledge: [
+          {
+            tag: "Persuasive Argumentation (Language & Debate)",
+            icon: "📢",
+            review: "Balancing Ethos (credibility), Pathos (emotion), and Logos (facts/logic) in an argument.",
+            application: "Startup founders use this exact triad when pitching investors for seed funding to build solar-powered water purifiers."
+          },
+          {
+            tag: "Supply, Demand & Incentives (Economics)",
+            icon: "📈",
+            review: "How price equilibrium shifts when resource scarcity meets consumer desire.",
+            application: "Policy directors structure tax subsidies so green energy becomes cheaper and more adopted than fossil fuels."
+          }
+        ],
+        roadmap: [
+          "Join or start a school Speech, Debate, or Model UN team.",
+          "Organize a student fundraiser or marketplace event for a cause you care about.",
+          "Read 'Shoe Dog' by Phil Knight to learn the realities of launching a dream."
+        ]
+      },
+      {
+        id: "conventional",
+        name: "Precision Bay",
+        riasec: "Conventional (Organizers)",
+        icon: "📐",
+        tagline: "Order, Systems, Precision & Architecture",
+        strengths: "You love bringing clarity out of chaos, designing flawless organizational workflows, and ensuring rules and numbers add up accurately.",
+        advice: "The modern digital economy runs on your meticulous standards. Your systematic brain is what keeps high-stakes systems trustworthy and secure.",
+        careers: [
+          {
+            title: "Cybersecurity Compliance Architect",
+            roleModel: "Katherine Johnson (NASA Mathematician & Orbital Computer)",
+            skills: "System Auditing, Cryptography Protocols, Risk Management",
+            traits: "Meticulous, Reliable, Methodical"
+          },
+          {
+            title: "Forensic Financial Analyst",
+            roleModel: "Grace Hopper (Pioneer of Computer Standards & Compilers)",
+            skills: "Data Validation, Predictive Modeling, Spreadsheet Mastery",
+            traits: "Disciplined, Analytical, High-Integrity"
+          }
+        ],
+        knowledge: [
+          {
+            tag: "Algorithmic Logic & Flowcharts (Computer Science)",
+            icon: "💻",
+            review: "Step-by-step conditional statements (IF / THEN / ELSE) that govern error-free processes.",
+            application: "Security architects create impenetrable data compliance check loops that prevent data leaks in banking apps."
+          },
+          {
+            tag: "Algebraic Functions & Systems of Equations (Math)",
+            icon: "🔢",
+            review: "Finding exact variables that balance multi-layered simultaneous equations.",
+            application: "Forensic analysts spot hidden embezzlement by identifying minuscule mathematical discrepancies in balance sheets."
+          }
+        ],
+        roadmap: [
+          "Master keyboard shortcuts and advanced formula functions (XLOOKUP) in Excel or Google Sheets.",
+          "Organize your personal study notes using systematic indexing systems in Notion.",
+          "Try a beginner capture-the-flag (CTF) security puzzle challenge online."
+        ]
+      }
+    ];
+
+    let currentIsland = islandsData[0];
+
+    // Render Navigation
+    const navContainer = document.getElementById("islandNav");
+    function renderNav() {
+      navContainer.innerHTML = islandsData.map(island => `
+        <button class="island-btn ${island.id === currentIsland.id ? 'active' : ''}" onclick="selectIsland('${island.id}')">
+          <div class="island-icon">${island.icon}</div>
+          <div class="island-btn-text">
+            <h3>${island.name}</h3>
+            <p>${island.riasec.split(' ')[0]}</p>
+          </div>
+        </button>
+      `).join('');
+    }
+
+    // Render Island Details
+    const contentHub = document.getElementById("contentHub");
+    function renderContent() {
+      contentHub.innerHTML = `
+        <div class="island-hero">
+          <span class="theme-tag">${currentIsland.riasec}</span>
+          <h2>${currentIsland.icon} Welcome to ${currentIsland.name}</h2>
+          <p style="color: #4b6584; font-weight: 700; margin-top: 4px;">${currentIsland.tagline}</p>
+        </div>
+
+        <!-- Personality & Strength Highlight -->
+        <div class="strengths-card">
+          <h4>✨ Your Innate Strengths & Advice</h4>
+          <p><strong>Natural Superpower:</strong> ${currentIsland.strengths}</p>
+          <p style="margin-top: 8px;"><strong>Career Coach Tip:</strong> ${currentIsland.advice}</p>
+        </div>
+
+        <!-- Featured Careers & Inspiring Role Models -->
+        <div>
+          <h3 class="section-title">🌟 Modern Careers & Iconic Figures</h3>
+          <div class="career-grid">
+            ${currentIsland.careers.map(c => `
+              <div class="career-card">
+                <div>
+                  <h4 class="career-title">${c.title}</h4>
+                  <div class="role-model">👑 Role Model: ${c.roleModel}</div>
+                  <p class="traits-list"><strong>Key Skills:</strong> ${c.skills}</p>
+                </div>
+                <div class="traits-list" style="border-top: 1px dashed #d5e6f0; padding-top: 8px;">
+                  <strong>Personality Fit:</strong> ${c.traits}
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+
+        <!-- Interactive School Knowledge Review -->
+        <div class="knowledge-box">
+          <h3 class="section-title" style="color: #8c5b00;">💡 Classroom Knowledge Deep-Dive</h3>
+          <p style="font-size: 0.9rem; color: #6b521b;">What you learn in school today is the fuel for tomorrow's careers. <strong>Click any concept below to see its real-world superpower:</strong></p>
+          <div class="chips-group">
+            ${currentIsland.knowledge.map((k, index) => `
+              <button class="knowledge-chip" onclick="openKnowledgeModal(${index})">
+                ${k.icon} ${k.tag} <span>🔍</span>
+              </button>
+            `).join('')}
+          </div>
+          <div class="chip-instruction">👆 Click to inspect textbook review & professional application!</div>
+        </div>
+
+        <!-- Learning Roadmap -->
+        <div>
+          <h3 class="section-title">🚀 Where to Start Learning This Week</h3>
+          <div class="roadmap-list">
+            ${currentIsland.roadmap.map(item => `
+              <div class="roadmap-item">
+                <span class="roadmap-icon">📌</span>
+                <span>${item}</span>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    function selectIsland(id) {
+      currentIsland = islandsData.find(i => i.id === id);
+      renderNav();
+      renderContent();
+    }
+
+    // Modal Interaction
+    const modal = document.getElementById("knowledgeModal");
+    const modalClose = document.getElementById("modalClose");
+
+    function openKnowledgeModal(index) {
+      const k = currentIsland.knowledge[index];
+      document.getElementById("mIcon").textContent = k.icon;
+      document.getElementById("mTitle").textContent = k.tag;
+      document.getElementById("mReview").innerHTML = `<strong>📖 School Curriculum Review:</strong><br>${k.review}`;
+      document.getElementById("mApplication").innerHTML = `<strong>⚡ Real-World Career Application:</strong><br>${k.application}`;
+      modal.classList.add("show");
+    }
+
+    modalClose.onclick = () => modal.classList.remove("show");
+    window.onclick = (e) => {
+      if (e.target === modal) modal.classList.remove("show");
+    };
+
+    // Initialize
+    renderNav();
+    renderContent();
+  </script>
+</body>
+</html>
